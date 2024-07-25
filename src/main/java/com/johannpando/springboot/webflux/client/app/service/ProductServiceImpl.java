@@ -16,57 +16,59 @@ import reactor.core.publisher.Mono;
 @Service
 public class ProductServiceImpl implements IProductService{
 	
+	// Non-blocking, reactive client to perform HTTP requests, exposing a fluent, 
+	// reactive API over underlying HTTP client libraries such as Reactor Netty.
 	@Autowired
-	private WebClient webClient;
+	private WebClient.Builder webClient;
 
 	@Override
 	public Flux<Product> findAll() {
-		return webClient
-			.get()
-			.accept(MediaType.APPLICATION_JSON)
+		return webClient.build()
+			.get() // Make a GET request
+			.accept(MediaType.APPLICATION_JSON) // Accept JSON response
 			//.exchange() // Deprecated
-			.retrieve()
-			.bodyToFlux(Product.class);
+			.retrieve() // Execute the request and retrieve the response
+			.bodyToFlux(Product.class); // Convert the response body to a Flux of Product
 	}
 
 	@Override
 	public Mono<Product> findById(String id) {
-		return webClient
-			.get().uri("/{id}", Collections.singletonMap("id", id))
-			.accept(MediaType.APPLICATION_JSON)
-			.retrieve()
-			.bodyToMono(Product.class);
+		return webClient.build()
+			.get().uri("/{id}", Collections.singletonMap("id", id)) // Make a GET request with the provided ID in the URI
+			.accept(MediaType.APPLICATION_JSON) // Accept JSON response
+			.retrieve() // Execute the request and retrieve the response
+			.bodyToMono(Product.class); // Convert the response body to a Mono of Product object
 	}
 
 	@Override
 	public Mono<Product> save(ImageProductDTO imageProductDTO) {
-		return webClient
-			.post()
-			.accept(MediaType.APPLICATION_JSON)
-			.contentType(MediaType.APPLICATION_JSON)
-			.bodyValue(imageProductDTO)
-			.retrieve()
-			.bodyToMono(Product.class);
+		return webClient.build()
+			.post() // Make a POST request
+			.accept(MediaType.APPLICATION_JSON) // Accept a JSON response
+			.contentType(MediaType.APPLICATION_JSON) // Set the request content type to JSON
+			.bodyValue(imageProductDTO) // Set the request body with the provided imageProductDTO
+			.retrieve() // Execute the request and retrieve the response
+			.bodyToMono(Product.class); // Convert the response body to a Mono of Product object
 	}
 
 	@Override
 	public Mono<Product> update(Product productDTO, String id) {
-		return webClient
-				.put().uri("/{id}", Collections.singletonMap("id", id))
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
+		return webClient.build()
+				.put().uri("/{id}", Collections.singletonMap("id", id)) // Make a PUT request with the provided ID in the URI
+				.accept(MediaType.APPLICATION_JSON) // Accept a JSON response
+				.contentType(MediaType.APPLICATION_JSON) // Set the request content type to JSON
 				// .syncBody(id) // Deprecated
-				.bodyValue(productDTO)
-				.retrieve()
-				.bodyToMono(Product.class);
+				.bodyValue(productDTO) // Set the request body with the provided productDTO object
+				.retrieve() // Execute the request and retrieve the response
+				.bodyToMono(Product.class); // Convert the response body to a Mono of Product object
 	}
 
 	@Override
 	public Mono<Void> delete(String id) {
-		return webClient
-			.delete().uri("/{id}", Collections.singletonMap("id", id))
-			.retrieve()
-			.bodyToMono(Void.class);
+		return webClient.build()
+			.delete().uri("/{id}", Collections.singletonMap("id", id)) // Make a DELETE request with the provided ID in the URI
+			.retrieve() // Execute the request and retrieve the response
+			.bodyToMono(Void.class); // Convert the response body to a Mono Void
 	}
 
 }

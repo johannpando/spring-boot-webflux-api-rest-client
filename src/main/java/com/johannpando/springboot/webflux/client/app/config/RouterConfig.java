@@ -14,6 +14,8 @@ public class RouterConfig {
 
 	@Bean
 	RouterFunction<ServerResponse> routes(ProductHandler handler) {
+		//request -> handler.list(request));
+		// It is the same
 		return RouterFunctions.
 			route(RequestPredicates.GET("/api/client"), handler::list)
 			.andRoute(RequestPredicates.PUT("/api/client/{id}"), handler::update)
