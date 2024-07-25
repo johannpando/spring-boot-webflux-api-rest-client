@@ -26,8 +26,7 @@ public class ProductServiceImpl implements IProductService{
 			.accept(MediaType.APPLICATION_JSON)
 			//.exchange() // Deprecated
 			.retrieve()
-			.bodyToFlux(Product.class)
-			;
+			.bodyToFlux(Product.class);
 	}
 
 	@Override
